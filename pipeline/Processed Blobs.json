@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy Data from SQL",
-				"type": "Copy",
+				"name": "Lookup Processible Blobs",
+				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -19,16 +19,49 @@
 						"type": "AzureSqlSource",
 						"sqlReaderStoredProcedureName": "[dbo].[uspGetProcessableBlogs]"
 					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
+					"dataset": {
 						"referenceName": "processibleBlobs",
 						"type": "DatasetReference"
 					}
-				]
+				}
+			},
+			{
+				"name": "Iterate All Blobs",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup Processible Blobs",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup Processible Blobs').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Set Blob Path",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": []
+						}
+					]
+				}
 			}
 		],
+		"variables": {
+			"blobPath": {
+				"type": "String"
+			},
+			"blobName": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
