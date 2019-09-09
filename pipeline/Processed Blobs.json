@@ -48,7 +48,27 @@
 							"name": "Set Blob Path",
 							"type": "SetVariable",
 							"dependsOn": [],
-							"userProperties": []
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "blobPath",
+								"value": {
+									"value": "@{item().Path}",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "BlobName",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "blobName",
+								"value": {
+									"value": "@{item().BlobName}",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
